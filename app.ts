@@ -41,7 +41,7 @@ class MachineRefillEvent implements IEvent {
     return this._machineId;
   }
 
-  refill(): number{
+  getRefillQuantity(): number{
     return this._refill;
   }
 
@@ -50,8 +50,27 @@ class MachineRefillEvent implements IEvent {
   }
 }
 
-//add new event here
+class LowStockWarningEvent implements IEvent{
+  constructor(private readonly _machineId: string) {}
+  machineId(): string {
+    return this._machineId;
+  }
 
+  type(): string {
+    return 'lowstock';
+  }
+}
+
+class StockLevelOkEvent implements IEvent{
+  constructor(private readonly _machineId: string) {}
+  machineId(): string {
+    return this._machineId;
+  }
+
+  type(): string {
+    return 'stockok';
+  }
+}
 
 class MachineSaleSubscriber implements ISubscriber {
   public machines: Machine[];
@@ -60,6 +79,7 @@ class MachineSaleSubscriber implements ISubscriber {
     this.machines = machines; 
   }
 
+  // bug [2]
   handle(event: MachineSaleEvent): void {
     this.machines[2].stockLevel -= event.getSoldQuantity();
   }
@@ -73,9 +93,36 @@ class MachineRefillSubscriber implements ISubscriber {
     this.machines = machines; 
   }
 
-  //add handle event
+  //add handle event still have bug
   handle(event: MachineRefillEvent): void {
-    this.machines[2].stockLevel +=  event.refill();
+    this.machines[2].stockLevel +=  event.getRefillQuantity();
+  }
+}
+
+class LowStockWarningSubscriber implements ISubscriber{
+  public machines: Machine[];
+
+  constructor (machines: Machine[]) {
+    this.machines = machines; 
+  }
+   handle(event: LowStockWarningEvent): void {
+    console.log("wait")
+  }
+
+}
+
+//pubsub class needed to be fix
+class PublishSubscribeService implements IPublishSubscribeService{
+  publish(event: IEvent): void {
+    
+  }
+
+  subscribe(type: string, handler: ISubscriber): void {
+    
+  }
+
+  unsubscribe(type: string, handler: ISubscriber): void {
+    
   }
 }
 
