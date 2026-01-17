@@ -29,7 +29,7 @@ The project is contained within a single entry file for simplicity, but logicall
  ```
 ## How to run
 
-> Require: Node.js
+> Required: Node.js
 
 ### 1. Installation
 Install the required dependencies by using this command in **Command Prompt Terminal**
